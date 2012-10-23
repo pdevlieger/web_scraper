@@ -7,7 +7,6 @@ import numpy
 import urllib2
 import lxml.etree
 from lxml.cssselect import CSSSelector
-import codecs
 
 # Set up the dicts we need linking players to their urls.
 playerdict = dict({	'C. Benteke': 'Aston Villa',
