@@ -1,4 +1,3 @@
-# Import the modules we need to parse the data.
 import urllib2
 import lxml.etree
 
@@ -63,9 +62,9 @@ def get_calendar_for_player(player):
 	url = url_by_team[player_team]
 	tree = lxml.etree.parse(url, parser)
 	
-	game_competition = [tag.text.strip().replace('\n', '') for tag in tree.xpath('//div[@class="div-competition"]')]
+	game_competition = [tag.text.strip().replace('\n', '') for tag in tree.xpath('//div[@class="match-competition"]')]
 	game_completed = [tag.text for tag in tree.xpath('//div[@class="match-status"]')]
-	game_result = [tag.text for tag in tree.xpath('//div[@class="match-result"]')]
+	game_result = [tag.text for tag in tree.xpath('//div[@class="match-result Completed"]')]
 	home_team = [tag.text for tag in tree.xpath('//div[@class="match-team-name home-team-name"]')]
 	away_team = [tag.text for tag in tree.xpath('//div[@class="match-team-name away-team-name"]')]
 	game_url = [tag.attrib['href'] for tag in tree.xpath('//a[@href]') if check_whether_game_url(tag)]
@@ -74,44 +73,33 @@ def get_calendar_for_player(player):
 	game_result = game_result + ['n/a']*(len(game_competition) - len(game_result))
 	game_url = game_url + ['n/a']*(len(game_competition) - len(game_url))
 
-	zip(game_competition, game_completed, home_team, game_result, away_team, game_url)
+	return zip(game_competition, game_completed, home_team, game_result, away_team, game_url)
 
-def set_player_tree_node(url, player): # returns a 1-element or empty list.
+def set_player_tree_node(url, player): # generator doesn't work here. alternative? 1-element or empty list.
 
 	game_tree = lxml.etree.parse(url, parser)
 	return [element for element in game_tree.xpath('//a[@class="player_lineup"]') if element.text == player]
 
-def image_tag_in_subtree(node):
-	children = node.getchildren()
-	return [element for element in children if element.tag == 'img']
-	# look up in lxml again, maybe easier way.
-	
 def get_player_match_stats(player_name_node):
 	
-	image_stats_bucket = player_name_node.getparent()
-	player_root = player_name_node.getparent().getparent()
-	image_vote = image_tag_in_subtree(player_root)
-	image_stats = image_tag_in_subtree(player_name_node)
-	images = [element.attrib['src'] for element in image_stats]
+	stat_images = player_name_node.getparent().findall('img')
+	vote_images = player_name_node.getparent().getparent().findall('img')
 	
-	mom = 'manOfTheMatch' in player_root.attrib['class']
-	fom = 'flopOfTheMatch' in player_root.attrib['class']
-	if image_vote:
-		voted_mom = 'd4.gif' in image_vote[0].attrib['src']
-		voted_fom = 'd5.gif' in image_vote[0].attrib['src']
-	else:
-		voted_mom = False
-		voted_fom = False
+	mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+	fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+	voted_mom, voted_fom = False, False
+	if vote_images:
+		voted_mom = get_stat_from_image('d4.gif', vote_images)
+		voted_fom = get_stat_from_image('d5.gif', vote_images)
 	
 	stats_match = {}
 	for key, image_name in stat_dict.iteritems():
-		stats_match[key] = get_stat_from_image(image_name, images)
+		stats_match[key] = get_stat_from_image(image_name, stat_images)
 	
 	return stats_match
 	
 def get_stat_from_image(image_name, images):
-#	return len([element for element in images if element.endswith(image_name)])
-	return len(filter(lambda node: node.endswith(image_name), images))
+	return len([element for element in images if element.attrib['src'].endswith(image_name)])
 	
 # work this out with a user interface.
 player = 'Eden Hazard'
@@ -121,5 +109,7 @@ for matchday in stats:
 	if url != 'n/a':
 		player_node = set_player_tree_node(url, player)
 		if player_node:
-			matchday.append(get_player_match_stats(player_node[0]))
+			matchday = matchday + (get_player_match_stats(player_node[0]),)
+#			print get_player_match_stats(player_node[0])
+		#print matchday
 print stats
