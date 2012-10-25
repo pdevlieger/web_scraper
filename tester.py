@@ -109,7 +109,8 @@ for matchday in stats:
 	if url != 'n/a':
 		player_node = set_player_tree_node(url, player)
 		if player_node:
-			matchday = matchday + (get_player_match_stats(player_node[0]),)
+			list(matchday).append(get_player_match_stats(player_node[0]))
+#			matchday = matchday + (get_player_match_stats(player_node[0]),)
 #			print get_player_match_stats(player_node[0])
 		#print matchday
 print stats
