@@ -72,31 +72,46 @@ def get_calendar_for_player(player):
 
 	game_result = game_result + ['n/a']*(len(game_competition) - len(game_result))
 	game_url = game_url + ['n/a']*(len(game_competition) - len(game_url))
-
+	
 	return zip(game_competition, game_completed, home_team, game_result, away_team, game_url)
 
-def set_player_tree_node(url, player): # generator doesn't work here. alternative? 1-element or empty list.
+def set_player_tree_node(htmltree, player):
+	
+	try:
+		return (element for element in htmltree.xpath('//a[@class="player_lineup"]') if element.text == player).next()
+	except:
+		StopIteration
+		return None
 
+def get_player_match_stats(url, player):
+	
 	game_tree = lxml.etree.parse(url, parser)
-	return [element for element in game_tree.xpath('//a[@class="player_lineup"]') if element.text == player]
-
-def get_player_match_stats(player_name_node):
+	player_name_node = set_player_tree_node(game_tree, player)
+	if player_name_node is not None:
+		stat_images = player_name_node.getparent().findall('img')
+		vote_images = player_name_node.getparent().getparent().findall('img')
 	
-	stat_images = player_name_node.getparent().findall('img')
-	vote_images = player_name_node.getparent().getparent().findall('img')
+		mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+		fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+		voted_mom, voted_fom = False, False
+		if vote_images:
+			voted_mom = get_stat_from_image('d4.gif', vote_images)
+			voted_fom = get_stat_from_image('d5.gif', vote_images)
 	
-	mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
-	fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
-	voted_mom, voted_fom = False, False
-	if vote_images:
-		voted_mom = get_stat_from_image('d4.gif', vote_images)
-		voted_fom = get_stat_from_image('d5.gif', vote_images)
+#		stats_match = {'Man of the match': mom,
+#					   'Flop of the match': fom,
+#					   'Voted man of the match': voted_mom,
+#					   'Voted flop of the match': voted_fom}
 	
-	stats_match = {}
-	for key, image_name in stat_dict.iteritems():
-		stats_match[key] = get_stat_from_image(image_name, stat_images)
-	
-	return stats_match
+		stats_match = {}
+		for key, image_name in stat_dict.iteritems():
+			stats_match[key] = get_stat_from_image(image_name, stat_images)
+		
+		stats_match['Man of the match'] = mom
+		stats_match['Flop of the match'] = fom
+		stats_match['Voted man of the match'] = voted_mom
+		stats_match['Voted flop of the match'] = voted_fom
+		return stats_match
 	
 def get_stat_from_image(image_name, images):
 	return len([element for element in images if element.attrib['src'].endswith(image_name)])
@@ -105,12 +120,8 @@ def get_stat_from_image(image_name, images):
 player = 'Eden Hazard'
 stats = get_calendar_for_player(player)
 for matchday in stats:
+	matchday = list(matchday)
 	url = matchday[5]
 	if url != 'n/a':
-		player_node = set_player_tree_node(url, player)
-		if player_node:
-			list(matchday).append(get_player_match_stats(player_node[0]))
-#			matchday = matchday + (get_player_match_stats(player_node[0]),)
-#			print get_player_match_stats(player_node[0])
-		#print matchday
+		matchday.append(get_player_match_stats(url, player))
 print stats
