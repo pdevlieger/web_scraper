@@ -1,1 +1,1 @@
-web: python app.py -i json-rpc
+web: python app.py
