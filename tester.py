@@ -1,52 +1,38 @@
 import urllib2
 import lxml.etree
 
-team_by_player = {	'C. Benteke': 'Aston Villa',
-					'Moussa Dembele': 'Tottenham',
-					'Marouane Fellaini': 'Everton',
-					'Eden Hazard': 'Chelsea FC',
-					'Vincent Kompany': 'Manchester City',
-					'Romelu Lukaku': 'West Bromwich Albion',
-					'Simon Mignolet': 'Sunderland',
-					'Kevin Mirallas': 'Everton',
-					'Thomas Vermaelen': 'Arsenal FC',
-					'Jan Vertonghen': 'Tottenham',
-					'Kevin De Bruyne': 'Werder Bremen',
-					'Igor De Camargo': 'Borussia Moenchengladbach',
-					'Timmy Simmons': 'Nuernberg',
-					'Daniel Van Buyten': 'Bayern Muenchen',
-					'Thibaut Courtois': 'Atletico de Madrid',
-					'Jean-Francois Gillet': 'Torino',
-					'Gaby Mudingayi': 'Inter Milan',
-					'Radja Nainggolan': 'Cagliari',
-					'Toby Alderweireld': 'Ajax'
-				 }
+team_by_player = {'C. Benteke': 'Aston Villa','Moussa Dembele': 'Tottenham',
+'Marouane Fellaini': 'Everton','Eden Hazard': 'Chelsea FC',
+'Vincent Kompany': 'Manchester City','Romelu Lukaku': 'West Bromwich Albion',
+'Simon Mignolet': 'Sunderland','Kevin Mirallas': 'Everton',
+'Thomas Vermaelen': 'Arsenal FC','Jan Vertonghen': 'Tottenham',
+'Kevin De Bruyne': 'Werder Bremen','Igor De Camargo': 'Borussia Moenchengladbach',
+'Timmy Simmons': 'Nuernberg','Daniel Van Buyten': 'Bayern Muenchen',
+'Thibaut Courtois': 'Atletico de Madrid','Jean-Francois Gillet': 'Torino',
+'Gaby Mudingayi': 'Inter Milan','Radja Nainggolan': 'Cagliari'}
 				 		 
-url_by_team = {'Ajax': 'http://www.goal.com/en-au/teams/netherlands/274/ajax/calendar',
-				 'Arsenal FC': 'http://www.goal.com/en-gb/teams/england/94/arsenal/calendar',
-				 'Aston Villa': 'http://www.goal.com/en-gb/teams/england/95/aston-villa/calendar',
-				 'Atletico de Madrid': 'http://www.goal.com/en-gb/teams/spain/129/atl%C3%A9tico-de-madrid',
-				 'Bayern Muenchen': 'http://www.goal.com/en-gb/teams/germany/148/fc-bayern-m%C3%BCnchen/calendar',
-				 'Borussia Moenchengladbach': 'http://www.goal.com/en-gb/teams/germany/150/b-m%C3%B6nchengladbach/calendar',
-				 'Cagliari': 'http://www.goal.com/en-gb/teams/italy/141/cagliari/calendar',
-				 'Chelsea FC': 'http://www.goal.com/en-gb/teams/england/96/chelsea/calendar',
-				 'Everton': 'http://www.goal.com/en-gb/teams/england/110/everton/calendar',
-				 'FC Nuernberg': 'http://www.goal.com/en-gb/teams/germany/154/1-fc-n%C3%BCrnberg/calendar',
-				 'Inter Milan': 'http://www.goal.com/en-gb/teams/italy/2/inter/calendar',
-				 'Manchester City': 'http://www.goal.com/en-gb/teams/england/109/man-city/calendar',
-				 'Sunderland': 'http://www.goal.com/en-gb/teams/england/537/sunderland/calendar',
-				 'Torino': 'http://www.goal.com/en-gb/teams/italy/170/torino/calendar',
-				 'Tottenham': 'http://www.goal.com/en-gb/teams/england/105/tottenham/calendar',
-				 'Werder Bremen': 'http://www.goal.com/en-gb/teams/germany/147/werder-bremen/calendar',
-				 'West Bromwich Albion': 'http://www.goal.com/en-gb/teams/england/112/west-bromwich/calendar',
-				}
+url_by_team = {'Arsenal FC': 'http://www.goal.com/en-gb/teams/england/94/arsenal/calendar',
+'Aston Villa': 'http://www.goal.com/en-gb/teams/england/95/aston-villa/calendar',
+'Atletico de Madrid': 'http://www.goal.com/en-gb/teams/spain/129/atl%C3%A9tico-de-madrid',
+'Bayern Muenchen': 'http://www.goal.com/en-gb/teams/germany/148/fc-bayern-m%C3%BCnchen/calendar',
+'Borussia Moenchengladbach': 'http://www.goal.com/en-gb/teams/germany/150/b-m%C3%B6nchengladbach/calendar',
+'Cagliari': 'http://www.goal.com/en-gb/teams/italy/141/cagliari/calendar',
+'Chelsea FC': 'http://www.goal.com/en-gb/teams/england/96/chelsea/calendar',
+'Everton': 'http://www.goal.com/en-gb/teams/england/110/everton/calendar',
+'FC Nuernberg': 'http://www.goal.com/en-gb/teams/germany/154/1-fc-n%C3%BCrnberg/calendar',
+'Inter Milan': 'http://www.goal.com/en-gb/teams/italy/2/inter/calendar',
+'Manchester City': 'http://www.goal.com/en-gb/teams/england/109/man-city/calendar',
+'Sunderland': 'http://www.goal.com/en-gb/teams/england/537/sunderland/calendar',
+'Torino': 'http://www.goal.com/en-gb/teams/italy/170/torino/calendar',
+'Tottenham': 'http://www.goal.com/en-gb/teams/england/105/tottenham/calendar',
+'Werder Bremen': 'http://www.goal.com/en-gb/teams/germany/147/werder-bremen/calendar',
+'West Bromwich Albion': 'http://www.goal.com/en-gb/teams/england/112/west-bromwich/calendar'}
 
-stat_dict = {'goal': 'g1.gif', 'own goal': 'og.gif', 'penalty scored': 'p.gif', 
-			'penalty missed': 'pw.gif', 'yellow card': 'y1.gif', 'assist': 'assists.gif',
-			'penalty save': 'penalty_saves.gif', 'penalty_shootout_goal':'penalty_shootout_goals.gif',
-			'penalty shootout miss': 'penalty_shootout_misses.gif', 'second yellow card/red card': 'yr.gif', 
-			'red card': 'r1.gif', 'injury': 'ij.gif'
-			}
+stat_dict = {'goal': 'g1.gif', 'own goal': 'og.gif', 'penalty scored': 'p.gif',
+'penalty missed': 'pw.gif', 'yellow card': 'y1.gif', 'assist': 'assists.gif',
+'penalty save': 'penalty_saves.gif', 'penalty_shootout_goal':'penalty_shootout_goals.gif',
+'penalty shootout miss': 'penalty_shootout_misses.gif', 'second yellow card/red card': 'yr.gif', 
+'red card': 'r1.gif', 'injury': 'ij.gif'}
 
 parser = lxml.etree.HTMLParser(encoding='utf-8')
 
@@ -75,16 +61,14 @@ def get_calendar_for_player(player):
 	
 	return zip(game_competition, game_completed, home_team, game_result, away_team, game_url)
 
-def set_player_tree_node(htmltree, player):
-	
+def set_player_tree_node(htmltree, player):	
 	try:
 		return (element for element in htmltree.xpath('//a[@class="player_lineup"]') if element.text == player).next()
 	except:
 		StopIteration
 		return None
 
-def get_player_match_stats(url, player):
-	
+def get_player_match_stats(url, player):	
 	game_tree = lxml.etree.parse(url, parser)
 	player_name_node = set_player_tree_node(game_tree, player)
 	if player_name_node is not None:
@@ -116,12 +100,15 @@ def get_player_match_stats(url, player):
 def get_stat_from_image(image_name, images):
 	return len([element for element in images if element.attrib['src'].endswith(image_name)])
 	
-# work this out with a user interface.
-player = 'Eden Hazard'
-stats = get_calendar_for_player(player)
-for matchday in stats:
-	matchday = list(matchday)
-	url = matchday[5]
-	if url != 'n/a':
-		matchday.append(get_player_match_stats(url, player))
-print stats
+if __name__ == "__main__":
+	name = raw_input("Whose statistics do you want to see? ")
+	while name not in team_by_player.keys():
+		name = raw_input("This name is not a valid option. Try again. ")
+	
+	stats = get_calendar_for_player(name)
+	for matchday in stats:
+		matchday = list(matchday)
+		url = matchday[5]
+		if url != 'n/a':
+			matchday.append(get_player_match_stats(url, name))	
+	print stats
