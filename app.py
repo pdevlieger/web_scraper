@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 port = int(os.environ.get('PORT', 5000))
 
-connection = Connection()
+connection = Connection('mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363')
 db = connection.test
 collection_1 = db.footballparser
 collection_2 = db.footballpermanent
