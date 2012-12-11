@@ -81,4 +81,6 @@ def index_builder(string):
 </body>
 </html>
 """ % string
-	return index_html
+	file = open('index.html', 'w')
+	file.write(index_html)
+	file.close()
