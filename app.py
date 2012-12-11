@@ -16,7 +16,7 @@ collection_2 = db.footballpermanent
 
 @app.route('/')
 def index():
-	x = db.footballparser.find({"_id" : ObjectId("50c14d9e381c171001115c82"})
+	x = db.footballparser.find({"_id" : ObjectId("50c14d9e381c171001115c82")})
 	string = x['name']
 	return render_template(index_builder(string))
 
