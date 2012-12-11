@@ -1,10 +1,11 @@
 from flask import Flask, render_template
 from pymongo import Connection
 import os
+from template_builder import index_builder
 
 #mongo_url = os.getenv('MONGOLAB_URI','mongodb://localhost:27017')
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 
 port = int(os.environ.get('PORT', 5000))
 
@@ -15,7 +16,9 @@ collection_2 = db.footballpermanent
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	x = db.footballparser.find({"_id" : ObjectId("50c14d9e381c171001115c82"})
+	string = x['name']
+	return render_template(index_builder(string))
 
 @app.route('/<name>')
 def player_data(name):
