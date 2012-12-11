@@ -16,7 +16,7 @@ collection_2 = db.footballpermanent
 
 @app.route('/')
 def index():
-	x = db.footballpermanent.find({"name" : 'Vincent Kompany')
+	x = db.footballpermanent.find({"name" : 'Vincent Kompany'})
 	string = x['name']
 	index_builder(string)
 	return render_template('index.html')
