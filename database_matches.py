@@ -57,9 +57,8 @@ def get_calendar_for_player(player):
 	game_result = game_result + [('score', 'n/a')]*(len(game_competition) - len(game_result))
 	game_url = game_url + [('url', 'n/a')]*(len(game_competition) - len(game_url))
 	name = [('name', player),]*(len(game_competition))
-	team = [('team', team_by_player(player)),]*(len(game_competition))
+	team = [('team', player_team),]*(len(game_competition))
 	output = []
-	
 	for line in zip(name, team, game_competition, game_completed, home_team, game_result, away_team, game_url):
 		element = dict(line)
 		output.append(element)
@@ -73,7 +72,7 @@ def set_player_tree_node(tree, player):
 		StopIteration
 		return None
 
-# need to parse the actual score, team as well.
+# need to parse the actual score as well.
 def get_player_match_stats(url, player):
 	if url == 'n/a':
 		stats_match = {key: None for key in stat_dict}

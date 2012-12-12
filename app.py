@@ -12,8 +12,9 @@ app = Flask(__name__)#, instance_relative_config=True)
 port = int(os.environ.get('PORT', 5000))
 
 connection = Connection('mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363')
+#connection = Connection('mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363')
 #connection = Connection()
-db = connection.test
+db = connection
 collection_1 = db.footballparser
 collection_2 = db.footballpermanent
 
@@ -26,7 +27,7 @@ def index():
 
 @app.route('/<player>')
 def player_data(player):
-#	permanent_stats = [x for x in db.footballpermanent.find({'name': player})][0]
+#	permanent_stats = [x for x in collection_2.find({'name': player})][0]
 #	match_stats = [x for x in db.footballparser.find({'name': player})]
 #	last_match = [x for x in match_stats if x['url']!='n/a'][-1]
 #	next_match = [x for x in match_stats if x['url']=='n/a'][0]

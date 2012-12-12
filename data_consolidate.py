@@ -5,7 +5,7 @@ from pymongo import Connection
 
 """   connecting to mongoDB..."""
 connection = Connection()
-db = connection.test
+db = connection
 collection_1 = db.footballparser
 collection_2 = db.footballpermanent
 
@@ -35,3 +35,4 @@ def make_database():
 		collection_1.insert(set_calendar_stats(name))
 		collection_2.insert(set_perm_scores(name))
 
+make_database()
