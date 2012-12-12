@@ -3,8 +3,6 @@ from pymongo import Connection
 from urlparse import urlsplit
 import os
 
-url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -31,14 +29,14 @@ def player_data(player):
 	dictionary_match = last_match, home_team_next = next_match['home team'], away_team_next = next_match['away team'])
 
 if __name__ == '__main__':
-	print url
-	port = int(os.environ.get('PORT', 5000))
+	url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
+#	url=os.getenv('MONGOLAB_URI', 'mongodb://localhost:27017')
+	port_number = int(os.environ.get('PORT', 5000))
 	parsed = urlsplit(url)
 	db_name = parsed.path[1:]
+
 	db = Connection(url)[db_name]
 	if '@' in url:
 		user_pass = parsed.netloc.split('@')[0].split(':')
 		print parsed.path[1:], user_pass
-		db.authenticate(user_pass[0], user_pass[1])
-#		app.run()
-		app.run(host='0.0.0.0', port = port, debug=True)
+		app.run(host = '0.0.0.0', port = port_number, debug=True)
