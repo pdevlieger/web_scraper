@@ -9,10 +9,10 @@ list_names = ['Moussa Dembele', 'Marouane Fellaini','Vincent Kompany','Romelu Lu
 
 app = Flask(__name__)#, instance_relative_config=True)
 
-#port = int(os.environ.get('PORT', 5000))
+port = int(os.environ.get('PORT', 5000))
 
-#connection = Connection('mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363')
-connection = Connection()
+connection = Connection('mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363')
+#connection = Connection()
 db = connection.test
 collection_1 = db.footballparser
 collection_2 = db.footballpermanent
@@ -45,7 +45,7 @@ def player_data(player):
 
 if __name__ == '__main__':
 	if connection:
-		app.run(debug=True)
-#		app.run(host='0.0.0.0', port = port)
+#		app.run(debug=True)
+		app.run(host='0.0.0.0', port = port)
 
 # mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363
