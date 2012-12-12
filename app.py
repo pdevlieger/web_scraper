@@ -3,11 +3,7 @@ from pymongo import Connection
 from urlparse import urlsplit
 import os
 
-url = os.getenv('MONGOLAB_URI','mongodb://localhost:27017/test')
-parsed = urlsplit(url)
-db_name = parsed.path[1:]
-port = int(os.environ.get('PORT', 5000))
-db = Connection(url)[db_name]
+url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
 
 app = Flask(__name__)
 
@@ -17,7 +13,7 @@ def index():
 
 @app.route('/<player>')
 def player_data(player):
-	permanent_stats = [x for x in db.footballpermanent.find({'name': player})][0]
+	permanent_stats = db.footballpermanent.find({'name': player})[0]
 	match_stats = [x for x in db.footballparser.find({'name': player})]
 	last_match = [x for x in match_stats if x['url']!='n/a'][-1]
 	next_match = [x for x in match_stats if x['url']=='n/a'][0]
@@ -36,9 +32,13 @@ def player_data(player):
 
 if __name__ == '__main__':
 	print url
-	if '@' in 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363':
-		print [x for x in db.footballpermanent.find({'name': 'Jan Vertonghen'})][0]
+	port = int(os.environ.get('PORT', 5000))
+	parsed = urlsplit(url)
+	db_name = parsed.path[1:]
+	db = Connection(url)[db_name]
+	if '@' in url:
 		user_pass = parsed.netloc.split('@')[0].split(':')
+		print parsed.path[1:], user_pass
 		db.authenticate(user_pass[0], user_pass[1])
-		print [x for x in db.footballpermanent.find({'name': 'Jan Vertonghen'})][0]
+#		app.run()
 		app.run(host='0.0.0.0', port = port, debug=True)
