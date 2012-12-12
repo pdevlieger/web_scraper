@@ -26,13 +26,15 @@ def index():
 
 @app.route('/<player>')
 def player_data(player):
-	permanent_stats = [x for x in db.footballpermanent.find({'name': player})][0]
-	match_stats = [x for x in db.footballparser.find({'name': player})]
-	last_match = [x for x in match_stats if x['url']!='n/a'][-1]
-	next_match = [x for x in match_stats if x['url']=='n/a'][0]
-	return render_template('template.html', name = player, dictionary_perm = permanent_stats,
-	home_team = last_match['home team'], score = last_match['score'], away_team = last_match['away team'],
-	dictionary_match = last_match, home_team_next = next_match['home team'], away_team_next = next_match['away team'])
+#	permanent_stats = [x for x in db.footballpermanent.find({'name': player})][0]
+#	match_stats = [x for x in db.footballparser.find({'name': player})]
+#	last_match = [x for x in match_stats if x['url']!='n/a'][-1]
+#	next_match = [x for x in match_stats if x['url']=='n/a'][0]
+	return render_template('template.html', name = player, dictionary_perm = {'Final rating': 4, 'Attacking': 5, 'Defending': 7},
+#	home_team = last_match['home team'], score = last_match['score'], away_team = last_match['away team'],
+#	dictionary_match = last_match, home_team_next = next_match['home team'], away_team_next = next_match['away team'])
+	home_team = 'Manchester City', score = '3 - 1', away_team = 'Arsenal',
+	dictionary_match = {'Goals': 0, 'Yellow card': 1, 'Man of the Match': True}, home_team_next = 'Sunderland', away_team_next = 'Manchester City')
 
 #name = 'Vincent Kompany',
 #	dictionary_perm = {'Final rating': 4, 'Attacking': 5, 'Defending': 7},
