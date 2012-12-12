@@ -17,6 +17,7 @@ connection = Connection('mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@
 db = connection.test
 collection_1 = db.footballparser
 collection_2 = db.footballpermanent
+db.authenticate('heroku_app9943363','703781')
 
 def get_name_stats(player):
 	dictionary_permanent = db.footballpermanent.find()
