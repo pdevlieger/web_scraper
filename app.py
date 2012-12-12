@@ -28,8 +28,8 @@ def index():
 
 @app.route('/<player>')
 def player_data(player):
-	permanent_stats = [x for x in collection_2.find({'name': player})]
-	match_stats = [x for x in db.footballparser.find({'name': player})]
+#	permanent_stats = [x for x in collection_2.find({'name': player})]
+#	match_stats = [x for x in db.footballparser.find({'name': player})]
 #	last_match = [x for x in match_stats if x['url']!='n/a'][-1]
 #	next_match = [x for x in match_stats if x['url']=='n/a'][0]
 	return render_template('template.html', name = player, dictionary_perm = {'Final rating': 4, 'Attacking': 5, 'Defending': 7},
