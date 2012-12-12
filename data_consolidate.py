@@ -5,7 +5,7 @@ from pymongo import Connection
 
 """   connecting to mongoDB..."""
 connection = Connection()
-db = connection
+db = connection.test
 collection_1 = db.footballparser
 collection_2 = db.footballpermanent
 
