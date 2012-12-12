@@ -46,6 +46,6 @@ def player_data(player):
 if __name__ == '__main__':
 	if connection:
 #		app.run(debug=True)
-		app.run(host='0.0.0.0', port = port)
+		app.run(host='0.0.0.0', port = port, debug=True)
 
 # mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363
