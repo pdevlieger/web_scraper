@@ -9,6 +9,10 @@ app = Flask(__name__)
 def index():
 	return render_template('index.html')
 
+@app.route('/')
+def index():
+	return render_template('index.html')
+
 @app.route('/<player>')
 def player_data(player):
 	permanent_stats = db.footballpermanent.find({'name': player})[0]
