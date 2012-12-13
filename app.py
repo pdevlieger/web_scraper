@@ -30,7 +30,7 @@ def player_data(player):
 
 if __name__ == '__main__':
 	url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
-#	url=os.getenv('MONGOLAB_URI', 'mongodb://localhost:27017')
+	url=os.environ['MONGOLAB_URI']#, 'mongodb://localhost:27017')
 	port_number = int(os.environ.get('PORT', 5000))
 	parsed = urlsplit(url)
 	db_name = parsed.path[1:]
