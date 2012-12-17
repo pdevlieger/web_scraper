@@ -9,10 +9,6 @@ app = Flask(__name__)
 def index():
 	return render_template('index.html')
 
-@app.route('/')
-def index():
-	return render_template('index.html')
-
 @app.route('/<player>')
 def player_data(player):
 	permanent_stats = db.footballpermanent.find({'name': player})[0]
@@ -33,16 +29,19 @@ def player_data(player):
 	dictionary_match = last_match, home_team_next = next_match['home team'], away_team_next = next_match['away team'])
 
 if __name__ == '__main__':
-#	url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
+# mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363
 	url=os.environ.get('MONGOLAB_URI', 'mongodb://localhost:27017')
+	print url
 	if url == 'mongodb://localhost:27017':
 		db_name = 'test'
 		db = Connection(url)[db_name]
 		app.run(debug=True)
 	else:
+		print 'yessariee'
 		port_number = int(os.environ.get('PORT', 5000))
 		parsed = urlsplit(url)
 		db_name = parsed.path[1:]
 		db = Connection(url)[db_name]
-#		user_pass = parsed.netloc.split('@')[0].split(':')
+		user_pass = parsed.netloc.split('@')[0].split(':')
+		db.authenticate(user_pass[0], user_pass[1])
 		app.run(host = '0.0.0.0', port = port_number, debug=True)
