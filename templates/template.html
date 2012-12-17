@@ -7,24 +7,24 @@
     <h1>STATS {{name}}</h1>
       <h3>Permanent stats</h3>
       <ul id ="permanent">
-        <li>Average rating: {{dictionary_perm['Final rating']}}</li>
-      {% for key in dictionary_perm if key != 'Final rating' and key != '_id' and key != 'name' %}
-        <li>{{key}}: {{dictionary_perm[key]}}</li>
+        <li>Average rating: {{stats['Final rating']}}</li>
+      {% for key in stats if key != 'Final rating' and key != '_id' and key != 'name' %}
+        <li>{{key}}: {{stats[key]}}</li>
       {% endfor %}
       </ul>
   <hr>
   
       <h3>Last Match</h3>
-      {{home_team}} {{score}} {{away_team}}
+      {{last_match.home_team}} {{last_match.score}} {{last_match.away_team}}
       <ul id ="match">
-      {% for key in dictionary_match if dictionary_match[key] > 0  %}
-        <li>{{key}}: {{dictionary_match[key]}}</li>
+      {% for key in last_match if last_match[key] > 0  %}
+        <li>{{key}}: {{last_match[key]}}</li>
       {% endfor %}
-      {% for key in dictionary_match if dictionary_match[key] == True  %}
-        <li>{{key}}: {{dictionary_match[key]}}</li>
+      {% for key in last_match if last_match[key] == True  %}
+        <li>{{key}}: {{last_match[key]}}</li>
       {% endfor %}
       </ul>
       <h3>Next Match</h3>
-      {{home_team_next}} --- {{away_team_next}}
+      {{next_match.home_team}} --- {{next_match.away_team}}
   </body>
 </html>
