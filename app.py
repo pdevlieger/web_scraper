@@ -24,7 +24,6 @@ def player_data(player):
     return render_template('template.html', **template_data)
 
 if __name__ == '__main__':
-#    url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
     url=os.environ.get('MONGOLAB_URI', 'mongodb://localhost:27017')
     if url == 'mongodb://localhost:27017':
         db_name = 'test'
@@ -35,5 +34,4 @@ if __name__ == '__main__':
         parsed = urlsplit(url)
         db_name = parsed.path[1:]
         db = Connection(url)[db_name]
-#        user_pass = parsed.netloc.split('@')[0].split(':')
         app.run(host = '0.0.0.0', port = port_number, debug=True)
