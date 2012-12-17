@@ -37,21 +37,16 @@ def static_data(name):
             temp_numbers.append(i.text)
         for j in statnames:
             temp_names.append(j.text)
+
+        # I don't understand what this is all about, but this is better
         if len(temp_numbers) == 11:
-            stats = {'name': name, 'Final rating': 'N/A', temp_names[0]: temp_numbers[0],
-                temp_names[1]: temp_numbers[1], temp_names[2]: temp_numbers[2],
-                temp_names[3]: temp_numbers[3], temp_names[4]: temp_numbers[4],
-                temp_names[5]: temp_numbers[5], temp_names[6]: temp_numbers[6],
-                temp_names[7]: temp_numbers[7], temp_names[8]: temp_numbers[8],
-                temp_names[9]: temp_numbers[9], temp_names[10]: temp_numbers[10]}
+            stats = {'name': name, 'Final rating': 'N/A'}
+            for i in range(temp_numbers):
+                stats[temp_names[i]] = temp_numbers[i]
         elif len(temp_numbers) == 12:
-            stats = {'name': name, 'Final rating': temp_numbers[0],
-                temp_names[0]: temp_numbers[1], temp_names[1]: temp_numbers[2],
-                temp_names[2]: temp_numbers[3], temp_names[3]: temp_numbers[4],
-                temp_names[4]: temp_numbers[5], temp_names[5]: temp_numbers[6],
-                temp_names[6]: temp_numbers[7], temp_names[7]: temp_numbers[8],
-                temp_names[8]: temp_numbers[9], temp_names[9]: temp_numbers[10],
-                temp_names[10]: temp_numbers[11]}
+            stats = {'name': name, 'Final rating': temp_numbers[0]}
+            for i in range(len(temp_numbers)-1):
+                stats[temp_names[i]] = temp_numbers[i+1]
     else:
         stats = None
     return stats
