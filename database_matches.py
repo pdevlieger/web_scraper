@@ -1,4 +1,3 @@
-import urllib2
 import lxml.etree
 
 team_by_player = {'C. Benteke': 'Aston Villa','Moussa Dembele': 'Tottenham',
@@ -65,7 +64,7 @@ def get_calendar_for_player(player):
     
     return output
 
-def set_player_tree_node(tree, player):    
+def set_player_tree_node(tree, player):
     try:
         return (element for element in tree.xpath('//a[@class="player_lineup"]') if player in element.text).next()
     except:
@@ -93,7 +92,7 @@ def get_player_match_stats(url, player):
             stats_match['Voted flop of the match'] = None
         else:
             stat_images = player_name_node.getparent().findall('img')
-            vote_images = player_name_node.getparent().getparent().findall('img')    
+            vote_images = player_name_node.getparent().getparent().findall('img')
             mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
             fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
             voted_mom, voted_fom = False, False
