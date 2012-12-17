@@ -26,7 +26,7 @@ def player_data(player):
 
 if __name__ == '__main__':
     if 'MONGOLAB_URL' in os.environ:
-        app.run(debug=True)
+        app.run()
     else:
         port_number = int(os.environ.get('PORT', 5000))
         app.run(host = '0.0.0.0', port = port_number, debug=True)
