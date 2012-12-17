@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 import os
 
-import db
+import dblib
+db = dblib.get_connection()
 
 app = Flask(__name__)
 
@@ -24,7 +25,6 @@ def player_data(player):
     return render_template('template.html', **template_data)
 
 if __name__ == '__main__':
-    db = db.get_connection()
     if 'MONGOLAB_URL' in os.environ:
         app.run(debug=True)
     else:
