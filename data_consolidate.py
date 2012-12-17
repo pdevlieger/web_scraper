@@ -23,7 +23,7 @@ def set_calendar_stats(name):
 def make_database():
 	db.footballparser.remove()
 	db.footballpermanent.remove()
-	for name in players:
+	for name in ['Moussa Dembele', 'Marouane Fellaini', 'Romelu Lukaku', 'Jan Vertonghen']:
 		print name
 		db.footballparser.insert(set_calendar_stats(name))
 		print "matches done!"
