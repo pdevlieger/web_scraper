@@ -28,31 +28,31 @@ url_by_player = {#'C. Benteke': 'http://www.goal.com/en-gb/people/congo-kinshasa
 #'Toby Alderweireld': 'http://www.goal.com/nl/people/netherlands/25746/toby-alderweireld'}
 
 def static_data(name):
-	tree = lxml.etree.parse(url_by_player[name], parser)
-	if statname_marker(tree):
-		statnames = statname_marker(tree)
-		statnumbers = [element for element in statnumber_marker(tree) if element.text is not None and '.' in element.text and 5>len(element.text)>2]
-		temp_names = []
-		temp_numbers = []
-		for i in statnumbers:
-			temp_numbers.append(i.text)
-		for j in statnames:
-			temp_names.append(j.text)
-		if len(temp_numbers) == 11:
-			stats = {'name': name, 'Final rating': 'N/A', temp_names[0]: temp_numbers[0],
-				temp_names[1]: temp_numbers[1], temp_names[2]: temp_numbers[2],
-				temp_names[3]: temp_numbers[3], temp_names[4]: temp_numbers[4],
-				temp_names[5]: temp_numbers[5], temp_names[6]: temp_numbers[6],
-				temp_names[7]: temp_numbers[7], temp_names[8]: temp_numbers[8],
-				temp_names[9]: temp_numbers[9], temp_names[10]: temp_numbers[10]}
-		elif len(temp_numbers) == 12:
-			stats = {'name': name, 'Final rating': temp_numbers[0],
-				temp_names[0]: temp_numbers[1], temp_names[1]: temp_numbers[2],
-				temp_names[2]: temp_numbers[3], temp_names[3]: temp_numbers[4],
-				temp_names[4]: temp_numbers[5], temp_names[5]: temp_numbers[6],
-				temp_names[6]: temp_numbers[7], temp_names[7]: temp_numbers[8],
-				temp_names[8]: temp_numbers[9], temp_names[9]: temp_numbers[10],
-				temp_names[10]: temp_numbers[11]}
-	else:
-		stats = None
-	return stats
+    tree = lxml.etree.parse(url_by_player[name], parser)
+    if statname_marker(tree):
+        statnames = statname_marker(tree)
+        statnumbers = [element for element in statnumber_marker(tree) if element.text is not None and '.' in element.text and 5>len(element.text)>2]
+        temp_names = []
+        temp_numbers = []
+        for i in statnumbers:
+            temp_numbers.append(i.text)
+        for j in statnames:
+            temp_names.append(j.text)
+        if len(temp_numbers) == 11:
+            stats = {'name': name, 'Final rating': 'N/A', temp_names[0]: temp_numbers[0],
+                temp_names[1]: temp_numbers[1], temp_names[2]: temp_numbers[2],
+                temp_names[3]: temp_numbers[3], temp_names[4]: temp_numbers[4],
+                temp_names[5]: temp_numbers[5], temp_names[6]: temp_numbers[6],
+                temp_names[7]: temp_numbers[7], temp_names[8]: temp_numbers[8],
+                temp_names[9]: temp_numbers[9], temp_names[10]: temp_numbers[10]}
+        elif len(temp_numbers) == 12:
+            stats = {'name': name, 'Final rating': temp_numbers[0],
+                temp_names[0]: temp_numbers[1], temp_names[1]: temp_numbers[2],
+                temp_names[2]: temp_numbers[3], temp_names[3]: temp_numbers[4],
+                temp_names[4]: temp_numbers[5], temp_names[5]: temp_numbers[6],
+                temp_names[6]: temp_numbers[7], temp_names[7]: temp_numbers[8],
+                temp_names[8]: temp_numbers[9], temp_names[9]: temp_numbers[10],
+                temp_names[10]: temp_numbers[11]}
+    else:
+        stats = None
+    return stats

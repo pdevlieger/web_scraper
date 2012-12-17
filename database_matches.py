@@ -37,99 +37,99 @@ stat_dict = {'goal': 'g1.gif', 'own goal': 'og.gif', 'penalty scored': 'p.gif',
 parser = lxml.etree.HTMLParser(encoding='utf-8')
 
 def check_whether_game_url(tree_node):
-	return 'en-gb/match' in tree_node.attrib['href'] and tree_node.getparent().attrib and 'match-entry' in tree_node.getparent().attrib['class']
+    return 'en-gb/match' in tree_node.attrib['href'] and tree_node.getparent().attrib and 'match-entry' in tree_node.getparent().attrib['class']
 
 def add_missing_parts_url(url):
-	return 'http://www.goal.com' + url.replace('index', 'report')
+    return 'http://www.goal.com' + url.replace('index', 'report')
 
 def get_calendar_for_player(player):
-	player_team = team_by_player[player]
-	url = url_by_team[player_team]
-	tree = lxml.etree.parse(url, parser)
-	
-	game_competition = [('competition', tag.text.strip().replace('\n', '')) for tag in tree.xpath('//div[@class="match-competition"]')]
-	game_completed = [('completed', tag.text) for tag in tree.xpath('//div[@class="match-status"]')]
-	game_result = [('score', tag.text) for tag in tree.xpath('//div[@class="match-result Completed"]')]
-	home_team = [('home team', tag.text) for tag in tree.xpath('//div[@class="match-team-name home-team-name"]')]
-	away_team = [('away team', tag.text) for tag in tree.xpath('//div[@class="match-team-name away-team-name"]')]
-	game_url = [tag.attrib['href'] for tag in tree.xpath('//a[@href]') if check_whether_game_url(tag)]
-	game_url = [('url', add_missing_parts_url(tag)) for tag in game_url]
-	game_result = game_result + [('score', 'n/a')]*(len(game_competition) - len(game_result))
-	game_url = game_url + [('url', 'n/a')]*(len(game_competition) - len(game_url))
-	name = [('name', player),]*(len(game_competition))
-	team = [('team', player_team),]*(len(game_competition))
-	output = []
-	for line in zip(name, team, game_competition, game_completed, home_team, game_result, away_team, game_url):
-		element = dict(line)
-		output.append(element)
-	
-	return output
+    player_team = team_by_player[player]
+    url = url_by_team[player_team]
+    tree = lxml.etree.parse(url, parser)
+    
+    game_competition = [('competition', tag.text.strip().replace('\n', '')) for tag in tree.xpath('//div[@class="match-competition"]')]
+    game_completed = [('completed', tag.text) for tag in tree.xpath('//div[@class="match-status"]')]
+    game_result = [('score', tag.text) for tag in tree.xpath('//div[@class="match-result Completed"]')]
+    home_team = [('home team', tag.text) for tag in tree.xpath('//div[@class="match-team-name home-team-name"]')]
+    away_team = [('away team', tag.text) for tag in tree.xpath('//div[@class="match-team-name away-team-name"]')]
+    game_url = [tag.attrib['href'] for tag in tree.xpath('//a[@href]') if check_whether_game_url(tag)]
+    game_url = [('url', add_missing_parts_url(tag)) for tag in game_url]
+    game_result = game_result + [('score', 'n/a')]*(len(game_competition) - len(game_result))
+    game_url = game_url + [('url', 'n/a')]*(len(game_competition) - len(game_url))
+    name = [('name', player),]*(len(game_competition))
+    team = [('team', player_team),]*(len(game_competition))
+    output = []
+    for line in zip(name, team, game_competition, game_completed, home_team, game_result, away_team, game_url):
+        element = dict(line)
+        output.append(element)
+    
+    return output
 
-def set_player_tree_node(tree, player):	
-	try:
-		return (element for element in tree.xpath('//a[@class="player_lineup"]') if player in element.text).next()
-	except:
-		StopIteration
-		return None
+def set_player_tree_node(tree, player):    
+    try:
+        return (element for element in tree.xpath('//a[@class="player_lineup"]') if player in element.text).next()
+    except:
+        StopIteration
+        return None
 
 # need to parse the actual score as well.
 def get_player_match_stats(url, player):
-	if url == 'n/a':
-		stats_match = {key: None for key in stat_dict}
-		stats_match['Played'] = None
-		stats_match['Man of the match'] = None
-		stats_match['Flop of the match'] = None
-		stats_match['Voted man of the match'] = None
-		stats_match['Voted flop of the match'] = None
-	else:
-		game_tree = lxml.etree.parse(url, parser)
-		player_name_node = set_player_tree_node(game_tree, player)
-		if player_name_node is None:
-			stats_match = {key: None for key in stat_dict}
-			stats_match['Played'] = False
-			stats_match['Man of the match'] = None
-			stats_match['Flop of the match'] = None
-			stats_match['Voted man of the match'] = None
-			stats_match['Voted flop of the match'] = None
-		else:
-			stat_images = player_name_node.getparent().findall('img')
-			vote_images = player_name_node.getparent().getparent().findall('img')	
-			mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
-			fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
-			voted_mom, voted_fom = False, False
-			if vote_images:
-				voted_mom = get_stat_from_image('d4.gif', vote_images)
-				voted_fom = get_stat_from_image('d5.gif', vote_images)	
-			stats_match = {}
-			for key, image_name in stat_dict.iteritems():
-				stats_match[key] = get_stat_from_image(image_name, stat_images)		
-			stats_match['Man of the match'] = mom
-			stats_match['Flop of the match'] = fom
-			stats_match['Voted man of the match'] = voted_mom
-			stats_match['Voted flop of the match'] = voted_fom
-	return stats_match
-		
+    if url == 'n/a':
+        stats_match = {key: None for key in stat_dict}
+        stats_match['Played'] = None
+        stats_match['Man of the match'] = None
+        stats_match['Flop of the match'] = None
+        stats_match['Voted man of the match'] = None
+        stats_match['Voted flop of the match'] = None
+    else:
+        game_tree = lxml.etree.parse(url, parser)
+        player_name_node = set_player_tree_node(game_tree, player)
+        if player_name_node is None:
+            stats_match = {key: None for key in stat_dict}
+            stats_match['Played'] = False
+            stats_match['Man of the match'] = None
+            stats_match['Flop of the match'] = None
+            stats_match['Voted man of the match'] = None
+            stats_match['Voted flop of the match'] = None
+        else:
+            stat_images = player_name_node.getparent().findall('img')
+            vote_images = player_name_node.getparent().getparent().findall('img')    
+            mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+            fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+            voted_mom, voted_fom = False, False
+            if vote_images:
+                voted_mom = get_stat_from_image('d4.gif', vote_images)
+                voted_fom = get_stat_from_image('d5.gif', vote_images)    
+            stats_match = {}
+            for key, image_name in stat_dict.iteritems():
+                stats_match[key] = get_stat_from_image(image_name, stat_images)        
+            stats_match['Man of the match'] = mom
+            stats_match['Flop of the match'] = fom
+            stats_match['Voted man of the match'] = voted_mom
+            stats_match['Voted flop of the match'] = voted_fom
+    return stats_match
+        
 
-	d = {key: value for (key, value) in sequence}
-	if player_name_node is not None:
-		stat_images = player_name_node.getparent().findall('img')
-		vote_images = player_name_node.getparent().getparent().findall('img')	
-		mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
-		fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
-		voted_mom, voted_fom = False, False
-		if vote_images:
-			voted_mom = get_stat_from_image('d4.gif', vote_images)
-			voted_fom = get_stat_from_image('d5.gif', vote_images)	
-		stats_match = {}
-		for key, image_name in stat_dict.iteritems():
-			stats_match[key] = get_stat_from_image(image_name, stat_images)		
-		stats_match['Man of the match'] = mom
-		stats_match['Flop of the match'] = fom
-		stats_match['Voted man of the match'] = voted_mom
-		stats_match['Voted flop of the match'] = voted_fom
-	else:
-		stats_match = None
-	return stats_match
-	
+    d = {key: value for (key, value) in sequence}
+    if player_name_node is not None:
+        stat_images = player_name_node.getparent().findall('img')
+        vote_images = player_name_node.getparent().getparent().findall('img')    
+        mom = 'manOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+        fom = 'flopOfTheMatch' in player_name_node.getparent().getparent().attrib['class']
+        voted_mom, voted_fom = False, False
+        if vote_images:
+            voted_mom = get_stat_from_image('d4.gif', vote_images)
+            voted_fom = get_stat_from_image('d5.gif', vote_images)    
+        stats_match = {}
+        for key, image_name in stat_dict.iteritems():
+            stats_match[key] = get_stat_from_image(image_name, stat_images)        
+        stats_match['Man of the match'] = mom
+        stats_match['Flop of the match'] = fom
+        stats_match['Voted man of the match'] = voted_mom
+        stats_match['Voted flop of the match'] = voted_fom
+    else:
+        stats_match = None
+    return stats_match
+    
 def get_stat_from_image(image_name, images):
-	return len([element for element in images if element.attrib['src'].endswith(image_name)])
+    return len([element for element in images if element.attrib['src'].endswith(image_name)])
