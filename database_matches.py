@@ -80,8 +80,7 @@ def get_calendar_for_player(player):
 def set_player_tree_node(tree, player):
     try:
         return (element for element in tree.xpath('//a[@class="player_lineup"]') if player in element.text).next()
-    except:
-        StopIteration
+    except StopIteration:
         return None
 
 # need to parse the actual score as well.
