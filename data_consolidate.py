@@ -1,28 +1,8 @@
 from database_static import static_data
 from database_matches import get_player_match_stats, get_calendar_for_player
-from template_builder import template_builder
 from pymongo import Connection
 from urlparse import urlsplit
-#import os
-
-"""   connecting to mongoDB on mongolab"""
-#url=os.getenv('MONGOLAB_URI', 'mongodb://localhost:27017')
-url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
-#port_number = int(os.environ.get('PORT', 5000))
-parsed = urlsplit(url)
-db_name = parsed.path[1:]
-
-db = Connection(url)[db_name]
-#collection_1 = db.footballparser
-#collection_2 = db.footballpermanent
-
-"""
-Step 1 is to store data as a dict I call 'data'
-
-sample data {'competition': CL, 'ongoing_game': True, 'home_team': 'Arsenal', etc.}
-Pass data to insert
-	collection.insert(data)
-"""
+import sys, os
 
 def set_perm_scores(name):
 	return static_data(name)
@@ -41,4 +21,16 @@ def make_database():
 		db.footballparser.insert(set_calendar_stats(name))
 		db.footballpermanent.insert(set_perm_scores(name))
 
-make_database()
+if __name__ == '__main__':
+#	url = 'mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363'
+	url=os.environ.get('MONGOLAB_URI', 'mongodb://localhost:27017')
+	if url == 'mongodb://localhost:27017':
+		db_name = 'test'
+		db = Connection(url)[db_name]
+	else:
+		port_number = int(os.environ.get('PORT', 5000))
+		parsed = urlsplit(url)
+		db_name = parsed.path[1:]
+		db = Connection(url)[db_name]
+#		user_pass = parsed.netloc.split('@')[0].split(':')
+	make_database()
