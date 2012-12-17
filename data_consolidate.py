@@ -14,6 +14,7 @@ def set_calendar_stats(name):
     return calendar
 
 def make_database():
+    db = dblib.get_connection()
     db.footballparser.remove()
     db.footballpermanent.remove()
     for name in ['Moussa Dembele', 'Marouane Fellaini', 'Romelu Lukaku', 'Simon Mignolet', 'Thomas Vermaelen', 'Jan Vertonghen']:
@@ -21,5 +22,4 @@ def make_database():
         db.footballpermanent.insert(set_perm_scores(name))
 
 if __name__ == '__main__':
-    db = dblib.get_connection()
     make_database()
