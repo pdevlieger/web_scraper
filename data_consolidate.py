@@ -1,8 +1,8 @@
 from database_static import static_data
 from database_matches import get_player_match_stats, get_calendar_for_player
-from pymongo import Connection
-from urlparse import urlsplit
 import os
+
+import db
 
 def set_perm_scores(name):
     return static_data(name)
@@ -22,13 +22,5 @@ def make_database():
         db.footballpermanent.insert(set_perm_scores(name))
 
 if __name__ == '__main__':
-    url=os.environ.get('MONGOLAB_URI', 'mongodb://localhost:27017')
-    if url == 'mongodb://localhost:27017':
-        db_name = 'test'
-        db = Connection(url)[db_name]
-    else:
-        port_number = int(os.environ.get('PORT', 5000))
-        parsed = urlsplit(url)
-        db_name = parsed.path[1:]
-        db = Connection(url)[db_name]
+    db = db.get_connection()
     make_database()

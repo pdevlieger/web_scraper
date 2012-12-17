@@ -1,7 +1,7 @@
 from flask import Flask, render_template
-from pymongo import Connection
-from urlparse import urlsplit
 import os
+
+import db
 
 app = Flask(__name__)
 
@@ -24,14 +24,9 @@ def player_data(player):
     return render_template('template.html', **template_data)
 
 if __name__ == '__main__':
-    url=os.environ.get('MONGOLAB_URI', 'mongodb://localhost:27017')
-    if url == 'mongodb://localhost:27017':
-        db_name = 'test'
-        db = Connection(url)[db_name]
+    db = db.get_connection()
+    if 'MONGOLAB_URL' in os.environ:
         app.run(debug=True)
     else:
         port_number = int(os.environ.get('PORT', 5000))
-        parsed = urlsplit(url)
-        db_name = parsed.path[1:]
-        db = Connection(url)[db_name]
         app.run(host = '0.0.0.0', port = port_number, debug=True)
