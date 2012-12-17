@@ -1,6 +1,5 @@
 from database_static import static_data
 from database_matches import get_player_match_stats, get_calendar_for_player
-import os
 
 import db
 
