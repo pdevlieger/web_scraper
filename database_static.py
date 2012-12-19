@@ -6,7 +6,6 @@ parser = lxml.etree.HTMLParser(encoding='utf-8')
 statname_marker = CSSSelector('div.statLabelWrap')
 statnumber_marker = CSSSelector('span')
 
-<<<<<<< HEAD
 url_by_player = {'C. Benteke': 'http://www.goal.com/en-gb/people/congo-kinshasa/59775/c-benteke',
 'Moussa Dembele': 'http://www.goal.com/en-gb/people/belgium/13937/moussa-dembele',
 'Marouane Fellaini': 'http://www.goal.com/en-gb/people/belgium/16148/marouane-fellaini',
@@ -26,7 +25,7 @@ url_by_player = {'C. Benteke': 'http://www.goal.com/en-gb/people/congo-kinshasa/
 'Gaby Mudingayi': 'http://www.goal.com/en-gb/people/belgium/8098/gaby-mudingayi',
 'Radja Nainggolan': 'http://www.goal.com/en-gb/people/belgium/12938/radja-nainggolan',
 'Toby Alderweireld': 'http://www.goal.com/nl/people/netherlands/25746/toby-alderweireld'}
-=======
+
 url_by_player = {
     #'C. Benteke': 'http://www.goal.com/en-gb/people/congo-kinshasa/59775/c-benteke',
     'Moussa Dembele': 'http://www.goal.com/en-gb/people/belgium/13937/moussa-dembele',
@@ -48,7 +47,6 @@ url_by_player = {
     #'Radja Nainggolan': 'http://www.goal.com/en-gb/people/belgium/12938/radja-nainggolan',
     #'Toby Alderweireld': 'http://www.goal.com/nl/people/netherlands/25746/toby-alderweireld',
 }
->>>>>>> abcf0e23aea02b7c19fd223ae1cae6cb75285153
 
 def static_data(name):
     tree = lxml.etree.parse(url_by_player[name], parser)
