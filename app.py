@@ -6,13 +6,10 @@ db = dblib.get_connection()
 
 app = Flask(__name__)
 
-<<<<<<< HEAD
-=======
 @app.route('/')
 def index():
     return render_template('index.html')
 
->>>>>>> abcf0e23aea02b7c19fd223ae1cae6cb75285153
 @app.route('/<player>')
 def player_data(player):
     permanent_stats = db.footballpermanent.find({'name': player})[0]
@@ -28,7 +25,6 @@ def player_data(player):
     return render_template('template.html', **template_data)
 
 if __name__ == '__main__':
-<<<<<<< HEAD
 # mongodb://heroku_app9943363:ltoo03cli1dnufi04kepkljv4l@ds045147.mongolab.com:45147/heroku_app9943363
 	url=os.environ.get('MONGOLAB_URI', 'mongodb://localhost:27017')
 	print url
@@ -45,10 +41,8 @@ if __name__ == '__main__':
 		user_pass = parsed.netloc.split('@')[0].split(':')
 		db.authenticate(user_pass[0], user_pass[1])
 		app.run(host = '0.0.0.0', port = port_number, debug=True)
-=======
     if 'MONGOLAB_URL' in os.environ:
         app.run()
     else:
         port_number = int(os.environ.get('PORT', 5000))
         app.run(host = '0.0.0.0', port = port_number, debug=True)
->>>>>>> abcf0e23aea02b7c19fd223ae1cae6cb75285153
