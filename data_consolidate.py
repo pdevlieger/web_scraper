@@ -1,19 +1,15 @@
 from database_static import static_data
 from database_matches import get_player_match_stats, get_calendar_for_player
-<<<<<<< HEAD
 from pymongo import Connection
 from urlparse import urlsplit
 import os
+import dblib
 
 players = ['C. Benteke','Moussa Dembele','Marouane Fellaini','Eden Hazard',
 'Vincent Kompany','Romelu Lukaku','Simon Mignolet','Kevin Mirallas','Thomas Vermaelen',
 'Jan Vertonghen','Kevin De Bruyne','Igor De Camargo','Timmy Simmons','Daniel Van Buyten',
 'Thibaut Courtois','Jean-Francois Gillet','Gaby Mudingayi','Radja Nainggolan',
 'Toby Alderweireld']
-=======
-
-import dblib
->>>>>>> abcf0e23aea02b7c19fd223ae1cae6cb75285153
 
 def set_perm_scores(name):
     return static_data(name)
@@ -26,7 +22,6 @@ def set_calendar_stats(name):
     return calendar
 
 def make_database():
-<<<<<<< HEAD
 	db.footballparser.remove()
 	db.footballpermanent.remove()
 	for name in ['Moussa Dembele', 'Marouane Fellaini', 'Romelu Lukaku', 'Jan Vertonghen']:
@@ -50,7 +45,6 @@ if __name__ == '__main__':
 		user_pass = parsed.netloc.split('@')[0].split(':')
 		db.authenticate(user_pass[0], user_pass[1])
 	make_database()
-=======
     db = dblib.get_connection()
     db.footballparser.remove()
     db.footballpermanent.remove()
@@ -60,4 +54,3 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     make_database()
->>>>>>> abcf0e23aea02b7c19fd223ae1cae6cb75285153
