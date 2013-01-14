@@ -1,21 +1,22 @@
 import lxml.etree
 
 team_by_player = {
-    'C. Benteke': 'Aston Villa','Moussa Dembele': 'Tottenham',
+    'Toby Alderweireld':'Ajax','C. Benteke': 'Aston Villa','Moussa Dembele': 'Tottenham',
     'Marouane Fellaini': 'Everton','Eden Hazard': 'Chelsea FC',
     'Vincent Kompany': 'Manchester City','Romelu Lukaku': 'West Bromwich Albion',
     'Simon Mignolet': 'Sunderland','Kevin Mirallas': 'Everton',
     'Thomas Vermaelen': 'Arsenal FC','Jan Vertonghen': 'Tottenham',
     'Kevin De Bruyne': 'Werder Bremen','Igor De Camargo': 'Borussia Moenchengladbach',
-    'Timmy Simmons': 'Nuernberg','Daniel Van Buyten': 'Bayern Muenchen',
+    'Timmy Simmons': 'FC Nuernberg','Daniel Van Buyten': 'Bayern Muenchen',
     'Thibaut Courtois': 'Atletico de Madrid','Jean-Francois Gillet': 'Torino',
     'Gaby Mudingayi': 'Inter Milan','Radja Nainggolan': 'Cagliari',
     }
 
 url_by_team = {
+	'Ajax': 'http://www.goal.com/en/teams/netherlands/274/ajax/calendar',
     'Arsenal FC': 'http://www.goal.com/en-gb/teams/england/94/arsenal/calendar',
     'Aston Villa': 'http://www.goal.com/en-gb/teams/england/95/aston-villa/calendar',
-    'Atletico de Madrid': 'http://www.goal.com/en-gb/teams/spain/129/atl%C3%A9tico-de-madrid',
+    'Atletico de Madrid': 'http://www.goal.com/en-gb/teams/spain/129/atl%C3%A9tico-de-madrid/calendar',
     'Bayern Muenchen': 'http://www.goal.com/en-gb/teams/germany/148/fc-bayern-m%C3%BCnchen/calendar',
     'Borussia Moenchengladbach': 'http://www.goal.com/en-gb/teams/germany/150/b-m%C3%B6nchengladbach/calendar',
     'Cagliari': 'http://www.goal.com/en-gb/teams/italy/141/cagliari/calendar',
@@ -48,7 +49,9 @@ stat_dict = {
 
 parser = lxml.etree.HTMLParser(encoding='utf-8')
 
-def check_whether_game_url(tree_node):
+def check_whether_game_url(tree_node,name):
+    if name == 'Toby Alderweireld':
+    	return 'en/match' in tree_node.attrib['href'] and tree_node.getparent().attrib and 'match-entry' in tree_node.getparent().attrib['class']
     return 'en-gb/match' in tree_node.attrib['href'] and tree_node.getparent().attrib and 'match-entry' in tree_node.getparent().attrib['class']
 
 def add_missing_parts_url(url):
@@ -61,10 +64,10 @@ def get_calendar_for_player(player):
 
     game_competition = [('competition', tag.text.strip().replace('\n', '')) for tag in tree.xpath('//div[@class="match-competition"]')]
     game_completed = [('completed', tag.text) for tag in tree.xpath('//div[@class="match-status"]')]
-    game_result = [('score', tag.text) for tag in tree.xpath('//div[@class="match-result Completed"]')]
+    game_result = [('score', tag.text) for tag in tree.xpath('//div[@class="match-result past"]')]
     home_team = [('home team', tag.text) for tag in tree.xpath('//div[@class="match-team-name home-team-name"]')]
     away_team = [('away team', tag.text) for tag in tree.xpath('//div[@class="match-team-name away-team-name"]')]
-    game_url = [tag.attrib['href'] for tag in tree.xpath('//a[@href]') if check_whether_game_url(tag)]
+    game_url = [tag.attrib['href'] for tag in tree.xpath('//a[@href]') if check_whether_game_url(tag,player)]
     game_url = [('url', add_missing_parts_url(tag)) for tag in game_url]
     game_result = game_result + [('score', 'n/a')]*(len(game_competition) - len(game_result))
     game_url = game_url + [('url', 'n/a')]*(len(game_competition) - len(game_url))
@@ -83,7 +86,14 @@ def set_player_tree_node(tree, player):
     except StopIteration:
         return None
 
-# need to parse the actual score as well.
+def get_match_rating(node):
+    rating_list = node.getparent().getparent().getchildren()
+    rating_node = [element for element in rating_list if 'player_rating' in element.attrib['class']][0]    
+    for node in rating_node.getchildren():
+        for j in node:
+            if '.' in j.text:
+                return j.text
+
 def get_player_match_stats(url, player):
     if url == 'n/a':
         stats_match = {key: None for key in stat_dict}
@@ -92,6 +102,7 @@ def get_player_match_stats(url, player):
         stats_match['Flop of the match'] = None
         stats_match['Voted man of the match'] = None
         stats_match['Voted flop of the match'] = None
+        stats_match['Match rating'] = None
     else:
         game_tree = lxml.etree.parse(url, parser)
         player_name_node = set_player_tree_node(game_tree, player)
@@ -102,6 +113,7 @@ def get_player_match_stats(url, player):
             stats_match['Flop of the match'] = None
             stats_match['Voted man of the match'] = None
             stats_match['Voted flop of the match'] = None
+            stats_match['Match rating'] = None
         else:
             stat_images = player_name_node.getparent().findall('img')
             vote_images = player_name_node.getparent().getparent().findall('img')
@@ -118,6 +130,11 @@ def get_player_match_stats(url, player):
             stats_match['Flop of the match'] = fom
             stats_match['Voted man of the match'] = voted_mom
             stats_match['Voted flop of the match'] = voted_fom
+            stats_match['Match rating'] = get_match_rating(player_name_node)
+            if stats_match['Match rating']:
+                stats_match['Played'] = True
+            else:
+                stats_match['Played'] = False
     return stats_match
 
 def get_stat_from_image(image_name, images):
